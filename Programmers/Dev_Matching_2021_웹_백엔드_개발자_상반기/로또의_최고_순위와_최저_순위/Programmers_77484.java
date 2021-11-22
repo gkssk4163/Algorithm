@@ -25,21 +25,20 @@ class Solution {
 	public int[] solution(int[] lottos, int[] win_nums) {
 		int[] answer = new int[2];
 
-		final int COUNT = 6;
 		int zeroCount = 0;
-		int machCount = 0;
-		for (int i = 0; i < COUNT; i++) {
-			if (lottos[i] == 0) {
+		int matchCount = 0;
+		for (int lotto : lottos) {
+			if (lotto == 0) {
 				zeroCount++;
-			} else {
-				for (int j = 0; j < COUNT; j++) {
-					if (lottos[i] == win_nums[j]) machCount++;
-				}
+				continue;
+			}
+			for (int win_num : win_nums) {
+				if (lotto == win_num) matchCount++;
 			}
 		}
 
-		answer[0] = rank(machCount + zeroCount);
-		answer[1] = rank(machCount);
+		answer[0] = rank(matchCount + zeroCount);
+		answer[1] = rank(matchCount);
 
 		return answer;
 	}
