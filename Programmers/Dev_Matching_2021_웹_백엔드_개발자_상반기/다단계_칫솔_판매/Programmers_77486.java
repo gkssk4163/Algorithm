@@ -39,7 +39,9 @@ class Solution {
 			price.put(enroll[i], 0);
 		}
 
-		calculate(relation, price, parseLinkedHashMap(seller, amount));
+		for (int i = 0; i < seller.length; i++) {
+			calculate(relation, price, seller[i], amount[i] * 100);
+		}
 
 		for (int i = 0; i < enroll.length; i++) {
 			answer[i] = price.get(enroll[i]);
@@ -48,43 +50,13 @@ class Solution {
 		return answer;
 	}
 
-	private Map<String, LinkedList<Integer>> parseLinkedHashMap(String[] seller, int[] amount) {
-		Map<String, LinkedList<Integer>> sellerInfo = new LinkedHashMap<>();
-		for (int i = 0; i < seller.length; i++) {
-			if (!sellerInfo.containsKey(seller[i])) {
-				LinkedList<Integer> amountList = new LinkedList<>();
-				amountList.push(amount[i] * 100);
-				sellerInfo.put(seller[i], amountList);
-			} else {
-				sellerInfo.get(seller[i]).push(amount[i] * 100);
-			}
-		}
-		return sellerInfo;
-	}
+	private void calculate(Map<String, String> relation, Map<String, Integer> price, String seller, int amount) {
+		while (relation.containsKey(seller) && amount != 0) {
+			int sellerAmount = (int) Math.ceil(amount * 0.9);
+			price.replace(seller, price.get(seller) + sellerAmount);
 
-	private void calculate(Map<String, String> relation, Map<String, Integer> price, Map<String, LinkedList<Integer>> sellerInfo) {
-		while (!sellerInfo.isEmpty()) {
-			Map<String, LinkedList<Integer>> nextSellerInfo = new LinkedHashMap<>();
-			sellerInfo.forEach((seller, amountList) -> {
-				String referral = relation.get(seller);
-
-				amountList.forEach((amount) -> {
-					int fee = amount / 10;
-					price.replace(seller, price.get(seller) + amount - fee);
-
-					if (fee == 0) return;
-					if (!nextSellerInfo.containsKey(referral)) {
-						if (referral.equals("-")) return;
-
-						LinkedList<Integer> fees = new LinkedList<>();
-						fees.push(fee);
-						nextSellerInfo.put(referral, fees);
-					} else {
-						nextSellerInfo.get(referral).push(fee);
-					}
-				});
-			});
-			sellerInfo = nextSellerInfo;
+			seller = relation.get(seller);
+			amount -= sellerAmount;
 		}
 	}
 }
