@@ -12,39 +12,33 @@ public class Programmers_43238 {
 		int[] times2 = {6, 10};
 		System.out.println(solution.solution(n2, times2));
 
-		int n3 = 6;
-		int[] times3 = {8, 10};
+		int n3 = 10;
+		int[] times3 = {3, 10};
 		System.out.println(solution.solution(n3, times3));
 
-		int n4 = 11;
-		int[] times4 = {3, 4, 10};
+		int n4 = 3;
+		int[] times4 = {1000000000, 1000000000, 1000000000};
 		System.out.println(solution.solution(n4, times4));
-
-		int n5 = 10;
-		int[] times5 = {3, 7, 10};
-		System.out.println(solution.solution(n5, times5));
 	}
 }
 
 class Solution {
 	public long solution(int n, int[] times) {
 		long minTime = 0L;
-		long maxTime = n * getMax(times);
+		long maxTime = (long) n * getMax(times);	// 형변환 중요!!!
 		long time = 0L;
 
-		while (minTime <= maxTime) {
+		while (minTime < maxTime) {
 			time = (minTime + maxTime) / 2;
+			if (time <= minTime) break;
+
 			long people = getNumberOfPeople(times, time);
 
-			if (people > n) {
+			if (people >= n) {
 				maxTime = time;
-			} else if (people < n) {
+			} else {
 				minTime = time;
-			} else if (people == n) break;
-		}
-
-		while (getNumberOfPeople(times, time) == n) {
-			time--;
+			}
 		}
 
 		return time + 1;
