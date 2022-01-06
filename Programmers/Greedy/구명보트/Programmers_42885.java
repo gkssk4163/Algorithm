@@ -2,9 +2,6 @@ package Programmers.Greedy.구명보트;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-
 import static org.junit.Assert.assertEquals;
 
 public class Programmers_42885 {
@@ -29,18 +26,19 @@ class Solution {
 	public int solution(int[] people, int limit) {
 		int answer = 0;
 
-		Arrays.sort(people);
-
-		LinkedList<Integer> remainPeople = new LinkedList<>();
-		for (int index = 0; index < people.length; index++) {
-			remainPeople.add(index);
+		int[] peopleCount = new int[241];
+		for (int i = 0; i < people.length; i++) {
+			peopleCount[people[i]]++;
 		}
 
-		while (!remainPeople.isEmpty()) {
-			int firstPeople = remainPeople.removeFirst();
-			for (int index = remainPeople.size() - 1; index >= 0; index--) {
-				if (people[firstPeople] + people[remainPeople.get(index)] <= limit) {
-					remainPeople.remove(index);
+		for (int i = 0; i < people.length; i++) {
+			int weight = people[i];
+			if (peopleCount[weight] == 0) continue;
+			peopleCount[weight]--;
+
+			for (int nextWeight = limit - weight; nextWeight >= 40; nextWeight--) {
+				if (peopleCount[nextWeight] > 0) {
+					peopleCount[nextWeight]--;
 					break;
 				}
 			}
