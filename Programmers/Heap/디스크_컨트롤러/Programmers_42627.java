@@ -1,25 +1,42 @@
 package Programmers.Heap.디스크_컨트롤러;
 
+import org.junit.Test;
+
 import java.util.PriorityQueue;
 
+import static org.junit.Assert.assertEquals;
+
 public class Programmers_42627 {
-	public static void main(String args[]) {
-		Solution solution = new Solution();
+	Solution solution = new Solution();
 
+	@Test
+	public void testCase1() {
 		int[][] jobs = {{0, 3}, {1, 9}, {2, 6}};
-		System.out.println(solution.solution(jobs));    // 9
+		assertEquals(9, solution.solution(jobs));
+	}
 
-		int[][] jobs2 = {{0, 6}, {0, 3}, {1, 9}, {2, 6}};
-		System.out.println(solution.solution(jobs2));    // 12
+	@Test
+	public void testCase2() {
+		int[][] jobs = {{0, 6}, {0, 3}, {1, 9}, {2, 6}};
+		assertEquals(12, solution.solution(jobs));
+	}
 
-		int[][] jobs3 = {{0, 3}, {4, 4}, {5, 3}, {4, 1}};
-		System.out.println(solution.solution(jobs3));    // 3
+	@Test
+	public void testCase3() {
+		int[][] jobs = {{0, 3}, {4, 4}, {5, 3}, {4, 1}};
+		assertEquals(3, solution.solution(jobs));
+	}
 
-		int[][] jobs4 = {{24, 10}, {28, 39}, {43, 20}, {37, 5}, {47, 22}, {20, 47}, {15, 34}, {15, 2}, {35, 43}, {26, 1}};
-		System.out.println(solution.solution(jobs4));    // 72
+	@Test
+	public void testCase4() {
+		int[][] jobs = {{24, 10}, {28, 39}, {43, 20}, {37, 5}, {47, 22}, {20, 47}, {15, 34}, {15, 2}, {35, 43}, {26, 1}};
+		assertEquals(72, solution.solution(jobs));
+	}
 
-		int[][] jobs5 = {{0, 1000}, {250, 1000}, {500, 1000}, {750, 1000}, {1000, 1000}};
-		System.out.println(solution.solution(jobs5));    // 2500
+	@Test
+	public void testCase5() {
+		int[][] jobs = {{0, 1000}, {250, 1000}, {500, 1000}, {750, 1000}, {1000, 1000}};
+		assertEquals(2500, solution.solution(jobs));
 	}
 }
 
@@ -33,60 +50,28 @@ class Solution {
 		}
 
 		int time = 0;
-		Disk disk = new Disk();
 		PriorityQueue<WaitingWork> waitingWorks = new PriorityQueue<>();
 		while (!works.isEmpty() || !waitingWorks.isEmpty()) {
-			for (int i = 0; i < works.size(); i++) {
+			// 대기중인 작업목록
+			while (!works.isEmpty()) {
 				Work work = works.peek();
-				WaitingWork incomingWork = new WaitingWork(work.requestTime, work.workTime);
-				if (incomingWork.requestTime > time) break;
+				if (work.requestTime > time) break;
 
-				waitingWorks.add(incomingWork);
-				works.remove();
+				works.poll();
+				waitingWorks.add(new WaitingWork(work.requestTime, work.workTime));
 			}
 
-			if (disk.isWork()) {
-				time += disk.work();
-				continue;
-			} else {
-				if (!waitingWorks.isEmpty()) {
-					WaitingWork work = waitingWorks.remove();
-					disk.assignWork(work);
-					answer += time - work.requestTime + work.workTime;
-				}
+			// 대기중인 작업이 있으면 처리
+			if (!waitingWorks.isEmpty()) {
+				WaitingWork waitingWork = waitingWorks.poll();
+				answer += time - waitingWork.requestTime + waitingWork.workTime;
+				time += waitingWork.workTime;
+			} else {	// 없으면 시간 1 증가
+				time++;
 			}
-
-			time++;
 		}
 
 		return answer / jobs.length;
-	}
-
-	class Disk {
-		final String STOP = "STOP";
-		final String WORK = "WORK";
-
-		String status;
-		int remainingTime;
-
-		public Disk() {
-			this.status = STOP;
-			this.remainingTime = 0;
-		}
-
-		public boolean isWork() {
-			return this.status.equals(WORK);
-		}
-
-		public int work() {
-			this.status = STOP;
-			return remainingTime - 1;
-		}
-
-		public void assignWork(WaitingWork work) {
-			this.remainingTime = work.workTime;
-			this.status = WORK;
-		}
 	}
 
 	class Work implements Comparable<Work> {
