@@ -26,27 +26,24 @@ public class Main {
 		}
 
 		Arrays.sort(numbers);
+
 		stack = new Stack<>();
-		for (int i = 0; i < N; i++) {
-			backtracking(i, 1);
-		}
+		backtracking(0, 0);
 	}
 
 	private static void backtracking(int index, int count) {
-		stack.push(numbers[index]);
-
 		if (count == M) {
 			System.out.println(stack.toString()
 					.replace("[", "")
 					.replace("]", "")
 					.replace(",", ""));
-			stack.pop();
 			return;
 		}
 
 		for (int i = index; i < N; i++) {
+			stack.push(numbers[i]);
 			backtracking(i, count + 1);
+			stack.pop();
 		}
-		stack.pop();
 	}
 }
