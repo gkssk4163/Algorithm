@@ -10,21 +10,24 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		int[][] board = new int[N][M];
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < N; j++) {
-				board[i][j] = Integer.parseInt(st.nextToken());
-			}
+		boolean[] isPrime = new boolean[1001];
+		for (int i = 2; i <= 1000; i++) {
+			isPrime[i] = true;
 		}
-
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (i == 0 && j == 0) {
-					// 8X8 전체체크
+		for (int i = 2; i <= 1000; i++) {
+			if (isPrime[i]) {
+				for (int j = 2; i * j <= 1000; j++) {
+					isPrime[i * j] = false;
 				}
 			}
 		}
+
+		st = new StringTokenizer(br.readLine());
+		int prime = 0;
+		for (int i = 0; i < N; i++) {
+			int number = Integer.parseInt(st.nextToken());
+			if (isPrime[number]) prime++;
+		}
+		System.out.println(prime);
 	}
 }
