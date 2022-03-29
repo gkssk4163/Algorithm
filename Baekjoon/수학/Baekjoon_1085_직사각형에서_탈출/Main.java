@@ -1,4 +1,4 @@
-package Baekjoon.Baekjoon_1085_직사각형에서_탈출;
+package Baekjoon.수학.Baekjoon_1085_직사각형에서_탈출;
 
 import java.io.BufferedReader;
 import java.io.IOException;
