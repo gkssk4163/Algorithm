@@ -1,4 +1,4 @@
-package Baekjoon.자료구조.Baekjoon_1764_듣보잡;
+package Baekjoon.자료구조.Map.Baekjoon_1764_듣보잡;
 
 import java.io.BufferedReader;
 import java.io.IOException;
